@@ -1,0 +1,36 @@
+CREATE TABLE sonko_4 AS
+WITH raw_data AS (
+    SELECT 
+        'current_expenses_total' AS expense, NULL AS "2012", 396183 AS "2013", 521819 AS "2014", 574751 AS "2015", 698401 AS "2016", 632167 AS "2017", 692810 AS "2018", 722364 AS "2019", 725481 AS "2020", 957439 AS "2021", 1050801 AS "2022", 1358910 AS "2023", 1708239 AS "2024"
+    UNION ALL SELECT 'labor_costs', NULL, NULL, NULL, NULL, 141046, 181174, 219266, 236037, 242116, 286516, 314649, 388306, 454703
+    UNION ALL SELECT 'taxes_and_fees', NULL, NULL, NULL, NULL, NULL, 11379, 18850, 18315, 16512, 21079, 21938, 28721, 39021
+    UNION ALL SELECT 'charitable_aid_grants_total', NULL, NULL, NULL, NULL, NULL, 129658, 107253, 121164, 133417, 208712, 222048, 358431, 397209
+    UNION ALL SELECT 'charitable_aid_individuals', NULL, NULL, NULL, NULL, 21968, 24849, 27791, 30568, 63714, 49497, 65347, 107682, NULL
+    UNION ALL SELECT 'charitable_aid_in_kind', NULL, NULL, NULL, NULL, NULL, 4704, 6077, 7763, 9780, 37475, 20632, 17010, 31965
+    UNION ALL SELECT 'administrative_expenses', NULL, NULL, NULL, NULL, NULL, 98584, 168782, 165828, 167438, 203060, 232569, 210778, 294921
+    UNION ALL SELECT 'fixed_assets_acquisition', NULL, 18228, 21745, 20917, 46892, 42809, 44659, 48128, 58919, 74604, 91889, 103396, 87692
+    UNION ALL SELECT 'land_acquisition', NULL, NULL, NULL, NULL, 226, 244, 1144, 343, 462, 4716, 593, 6361, 1308
+)
+SELECT 
+    year,
+    MAX(CASE WHEN expense = 'current_expenses_total' THEN value END) AS "current_expenses_total",
+    MAX(CASE WHEN expense = 'labor_costs' THEN value END) AS "labor_costs",
+    MAX(CASE WHEN expense = 'taxes_and_fees' THEN value END) AS "taxes_and_fees",
+    MAX(CASE WHEN expense = 'charitable_aid_grants_total' THEN value END) AS "charitable_aid_grants_total",
+    MAX(CASE WHEN expense = 'charitable_aid_individuals' THEN value END) AS "charitable_aid_individuals",
+    MAX(CASE WHEN expense = 'charitable_aid_in_kind' THEN value END) AS "charitable_aid_in_kind",
+    MAX(CASE WHEN expense = 'administrative_expenses' THEN value END) AS "administrative_expenses",
+    MAX(CASE WHEN expense = 'fixed_assets_acquisition' THEN value END) AS "fixed_assets_acquisition",
+    MAX(CASE WHEN expense = 'land_acquisition' THEN value END) AS "land_acquisition"
+FROM (
+    SELECT expense, year, value
+    FROM raw_data
+    CROSS JOIN LATERAL (
+        VALUES 
+            ('2012', "2012"), ('2013', "2013"), ('2014', "2014"), ('2015', "2015"),
+            ('2016', "2016"), ('2017', "2017"), ('2018', "2018"), ('2019', "2019"),
+            ('2020', "2020"), ('2021', "2021"), ('2022', "2022"), ('2023', "2023"), ('2024', "2024")
+    ) AS years(year, value)
+) AS unpivoted
+GROUP BY year
+ORDER BY year;

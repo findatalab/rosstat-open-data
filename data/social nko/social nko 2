@@ -1,0 +1,82 @@
+CREATE TABLE sonko_2 AS
+WITH raw_data AS (
+    SELECT 
+        'prevention_of_orphanhood' AS activity, 8678 AS "2012", 8664 AS "2013", 10231 AS "2014", 8683 AS "2015", 4476 AS "2016", 4454 AS "2017", 4630 AS "2018", 5133 AS "2019", 5021 AS "2020", 5917 AS "2021", 6571 AS "2022", 7351 AS "2023", 8113 AS "2024"
+    UNION ALL SELECT 'improving_quality_of_life_elderly', 9301, 9491, 11030, 9587, 6073, 6003, 6086, 6456, 5861, 5970, 6092, 6298, 6619
+    UNION ALL SELECT 'social_adaptation_disabled', 9383, 9631, 11243, 9818, 6659, 6651, 6536, 6776, 6194, 6269, 6416, 6606, 6988
+    UNION ALL SELECT 'other_social_support', 19557, 19743, 19692, 18616, 18269, 17648, 17000, 16973, 14756, 13747, 13409, 13323, 13655
+    UNION ALL SELECT 'emergency_preparedness', 1874, 2031, 3464, 3284, 2139, 2156, 2243, 2367, 2201, 2165, 2232, 2279, 2397
+    UNION ALL SELECT 'disaster_assistance', 2804, 3137, 5171, 4742, 2732, 2620, 2600, 2576, 1885, 1929, 2168, 2319, 2500
+    UNION ALL SELECT 'environmental_protection', 4263, 4424, 4041, 4005, 4776, 4930, 5025, 5601, 5354, 5504, 5677, 5953, 6212
+    UNION ALL SELECT 'heritage_preservation', 2170, 2305, 2166, 2109, 1818, 1792, 1811, 1955, 1595, 1653, 1677, 1757, 1860
+    UNION ALL SELECT 'legal_aid_citizens', 7750, 7492, 7718, 7504, 9455, 9098, 8618, 8563, 7584, 7225, 7072, 6903, 6917
+    UNION ALL SELECT 'legal_aid_organizations', 4059, 3555, 3997, 3526, 3295, 3205, 3075, 2993, 2797, 2789, 2759, 2768, 2830
+    UNION ALL SELECT 'prevention_dangerous_behavior', 3364, 3588, 4608, 4675, 3428, 3337, 3301, 3429, 2867, 2847, 2797, 2836, 2921
+    UNION ALL SELECT 'charitable_activities', 11524, 12468, 14856, 15535, 16245, 15914, 15581, 16117, 14019, 13447, 13899, 14357, 15640
+    UNION ALL SELECT 'support_charitable_activities', 8151, 8816, 10781, 11194, 9899, 9617, 9447, 9758, 8653, 8138, 8340, 8726, 9525
+    UNION ALL SELECT 'volunteering', 7035, 7486, 9669, 10194, 9477, 9209, 9323, 10015, 9885, 9563, 9930, 10469, 11228
+    UNION ALL SELECT 'education', 34156, 35241, 59399, 59953, 28401, 27331, 26231, 26680, 25593, 25392, 25649, 25705, 26345
+    UNION ALL SELECT 'culture_and_art', 24866, 24391, 48919, 48645, 15588, 14702, 14169, 14728, 13216, 13586, 14358, 15061, 16014
+    UNION ALL SELECT 'healthcare', 26068, 25936, 48888, 48627, 15022, 13894, 13227, 13271, 11256, 11214, 11207, 11310, 11562
+    UNION ALL SELECT 'patriotic_education', 27688, 28181, 46748, 42372, 18887, 18069, 17391, 17582, 13378, 13007, 13034, 13545, 14323
+    UNION ALL SELECT 'spiritual_development', 26336, 25579, 50858, 50455, 13160, 13106, 12627, 12666, 5347, 5055, 6146, 6286, 7122
+    UNION ALL SELECT 'physical_culture_sports', 11555, 13174, 36568, 42658, 29998, 29752, 29420, 30679, 28985, 29192, 30112, 30838, 32315
+    UNION ALL SELECT 'interethnic_cooperation', 3252, 3871, 22459, 22694, 9496, 9090, 8454, 8453, 6167, 5932, 5818, 5863, 5993
+    UNION ALL SELECT 'youth_initiatives', 3005, 3546, 3764, 4282, 6475, 6954, 7299, 7794, 7626, 7091, 7213, 7563, 7977
+    UNION ALL SELECT 'social_advertising', 585, 641, 622, 766, 1093, 1098, 1090, 1179, 1167, 1194, 1267, 1350, 1525
+    UNION ALL SELECT 'anti_corruption', 459, 514, 18427, 18334, 3710, 3044, 2481, 2260, 1742, 1571, 1418, 1321, 1287
+    UNION ALL SELECT 'search_work', NULL, NULL, NULL, 800, 1195, 1143, 1191, 1273, 1155, 1102, 1072, 1175, 1237
+    UNION ALL SELECT 'firefighting_rescue', NULL, NULL, NULL, 618, 685, 752, 775, 885, 890, 905, 926, 1005, 1064
+    UNION ALL SELECT 'migrant_integration', NULL, NULL, NULL, 624, 556, 675, 743, 891, 837, 839, 851, 929, 942
+    UNION ALL SELECT 'drug_rehabilitation', NULL, NULL, NULL, 319, 633, 701, 720, 749, 710, 731, 727, 784, 859
+    UNION ALL SELECT 'labor_mobility', NULL, NULL, NULL, NULL, 612, 565, 530, 540, 514, 558, 567, 611, 697
+    UNION ALL SELECT 'political_repression_memory', NULL, NULL, NULL, NULL, 1673, 1409, 1212, 1139, 1017, 960, 892, 864, 846
+    UNION ALL SELECT 'other_activities', 27396, 30195, 55072, 61889, 41411, 39466, 36652, 37109, 29184, 27787, 27186, 25455, 24350
+    UNION ALL SELECT 'social_services', NULL, NULL, NULL, NULL, 9795, 25129, 27384, 28482, 25905, 26896, 27774, 28571, 31456
+)
+SELECT 
+    year,
+    MAX(CASE WHEN activity = 'prevention_of_orphanhood' THEN value END) AS "prevention_of_orphanhood",
+    MAX(CASE WHEN activity = 'improving_quality_of_life_elderly' THEN value END) AS "improving_quality_of_life_elderly",
+    MAX(CASE WHEN activity = 'social_adaptation_disabled' THEN value END) AS "social_adaptation_disabled",
+    MAX(CASE WHEN activity = 'other_social_support' THEN value END) AS "other_social_support",
+    MAX(CASE WHEN activity = 'emergency_preparedness' THEN value END) AS "emergency_preparedness",
+    MAX(CASE WHEN activity = 'disaster_assistance' THEN value END) AS "disaster_assistance",
+    MAX(CASE WHEN activity = 'environmental_protection' THEN value END) AS "environmental_protection",
+    MAX(CASE WHEN activity = 'heritage_preservation' THEN value END) AS "heritage_preservation",
+    MAX(CASE WHEN activity = 'legal_aid_citizens' THEN value END) AS "legal_aid_citizens",
+    MAX(CASE WHEN activity = 'legal_aid_organizations' THEN value END) AS "legal_aid_organizations",
+    MAX(CASE WHEN activity = 'prevention_dangerous_behavior' THEN value END) AS "prevention_dangerous_behavior",
+    MAX(CASE WHEN activity = 'charitable_activities' THEN value END) AS "charitable_activities",
+    MAX(CASE WHEN activity = 'support_charitable_activities' THEN value END) AS "support_charitable_activities",
+    MAX(CASE WHEN activity = 'volunteering' THEN value END) AS "volunteering",
+    MAX(CASE WHEN activity = 'education' THEN value END) AS "education",
+    MAX(CASE WHEN activity = 'culture_and_art' THEN value END) AS "culture_and_art",
+    MAX(CASE WHEN activity = 'healthcare' THEN value END) AS "healthcare",
+    MAX(CASE WHEN activity = 'patriotic_education' THEN value END) AS "patriotic_education",
+    MAX(CASE WHEN activity = 'spiritual_development' THEN value END) AS "spiritual_development",
+    MAX(CASE WHEN activity = 'physical_culture_sports' THEN value END) AS "physical_culture_sports",
+    MAX(CASE WHEN activity = 'interethnic_cooperation' THEN value END) AS "interethnic_cooperation",
+    MAX(CASE WHEN activity = 'youth_initiatives' THEN value END) AS "youth_initiatives",
+    MAX(CASE WHEN activity = 'social_advertising' THEN value END) AS "social_advertising",
+    MAX(CASE WHEN activity = 'anti_corruption' THEN value END) AS "anti_corruption",
+    MAX(CASE WHEN activity = 'search_work' THEN value END) AS "search_work",
+    MAX(CASE WHEN activity = 'firefighting_rescue' THEN value END) AS "firefighting_rescue",
+    MAX(CASE WHEN activity = 'migrant_integration' THEN value END) AS "migrant_integration",
+    MAX(CASE WHEN activity = 'drug_rehabilitation' THEN value END) AS "drug_rehabilitation",
+    MAX(CASE WHEN activity = 'labor_mobility' THEN value END) AS "labor_mobility",
+    MAX(CASE WHEN activity = 'political_repression_memory' THEN value END) AS "political_repression_memory",
+    MAX(CASE WHEN activity = 'other_activities' THEN value END) AS "other_activities",
+    MAX(CASE WHEN activity = 'social_services' THEN value END) AS "social_services"
+FROM (
+    SELECT activity, year, value
+    FROM raw_data
+    CROSS JOIN LATERAL (
+        VALUES 
+            ('2012', "2012"), ('2013', "2013"), ('2014', "2014"), ('2015', "2015"),
+            ('2016', "2016"), ('2017', "2017"), ('2018', "2018"), ('2019', "2019"),
+            ('2020', "2020"), ('2021', "2021"), ('2022', "2022"), ('2023', "2023"), ('2024', "2024")
+    ) AS years(year, value)
+) AS unpivoted
+GROUP BY year
+ORDER BY year;

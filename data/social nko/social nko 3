@@ -1,0 +1,50 @@
+CREATE TABLE sonko_3 AS
+WITH raw_data AS (
+    SELECT 
+        'federal_budget' AS source, 27015 AS "2012", 54283 AS "2013", 49670 AS "2014", 45762 AS "2015", 28416 AS "2016", 43668 AS "2017", 57088 AS "2018", 56426 AS "2019", 71329 AS "2020", 126239 AS "2021", 94684 AS "2022", 145967 AS "2023", 176178 AS "2024"
+    UNION ALL SELECT 'grants_from_ngos', 651, 1160, 2232, 1965, 2913, 3258, 6360, 5698, 8958, 12443, 11361, 10619, 10489
+    UNION ALL SELECT 'regional_budgets', 25162, 21460, 35282, 34494, 49299, 38794, 38833, 43871, 60502, 119697, 72326, 100159, 137586
+    UNION ALL SELECT 'local_budgets', 13918, 11934, 9488, 9945, 10267, 6939, 7940, 9203, 8942, 10919, 12272, 14261, 16763
+    UNION ALL SELECT 'state_extrabudgetary_funds', 3197, 3138, 4369, 5450, 6346, 5629, 7440, 6883, 6935, 7960, 8176, 11490, 11018
+    UNION ALL SELECT 'donations_individuals', 66610, 66680, 84703, 96783, 131333, 113432, 120558, 122262, 111863, 118150, 132509, 164862, 187447
+    UNION ALL SELECT 'inheritance', 58, 6141, 2035, 1515, 317, 319, 26, 15, 18, 17, 15, 27, 17
+    UNION ALL SELECT 'donations_russian_ngos', 23789, 28067, 35778, 34257, 80211, 94279, 77366, 69615, 85907, 75380, 95601, 177923, 175174
+    UNION ALL SELECT 'donations_commercial_organizations', 81081, 71148, 122977, 125400, 174102, 199612, 175828, 159257, 187190, 275394, 418026, 444912, 599162
+    UNION ALL SELECT 'foreign_governments', 10320, 14852, 13432, 17242, 16306, 15765, 17046, 19619, 18897, 24487, 12513, 12066, 13685
+    UNION ALL SELECT 'foreign_individuals', 200, 225, 552, 526, 777, 519, 1848, 4015, 991, 1499, 815, 982, 520
+    UNION ALL SELECT 'endowment_income', 2278, 3386, 6377, 3329, 3374, 1904, 1606, 2793, 2759, 7938, 8085, 3080, 13183
+    UNION ALL SELECT 'revenue_from_sales', 157827, 193299, 211453, 226128, 254869, 261849, 274334, 294402, 265829, 353416, 390226, 486317, 576082
+    UNION ALL SELECT 'non_operating_income', 12069, 11648, 15013, 24504, 26149, 20588, 24685, 25755, 29786, 72587, 81466, 47817, 91378
+    UNION ALL SELECT 'funds_from_subsidiaries', 1955, 1703, 2287, 2335, 3640, 2872, 1670, 7412, 1643, 1774, 2113, 1893, 2041
+    UNION ALL SELECT 'other_receipts', 20654, 27298, 52856, 57226, 43575, 39430, 39059, 35462, 33796, 28173, 34058, 94952, 40591
+)
+SELECT 
+    year,
+    MAX(CASE WHEN source = 'federal_budget' THEN value END) AS "federal_budget",
+    MAX(CASE WHEN source = 'grants_from_ngos' THEN value END) AS "grants_from_ngos",
+    MAX(CASE WHEN source = 'regional_budgets' THEN value END) AS "regional_budgets",
+    MAX(CASE WHEN source = 'local_budgets' THEN value END) AS "local_budgets",
+    MAX(CASE WHEN source = 'state_extrabudgetary_funds' THEN value END) AS "state_extrabudgetary_funds",
+    MAX(CASE WHEN source = 'donations_individuals' THEN value END) AS "donations_individuals",
+    MAX(CASE WHEN source = 'inheritance' THEN value END) AS "inheritance",
+    MAX(CASE WHEN source = 'donations_russian_ngos' THEN value END) AS "donations_russian_ngos",
+    MAX(CASE WHEN source = 'donations_commercial_organizations' THEN value END) AS "donations_commercial_organizations",
+    MAX(CASE WHEN source = 'foreign_governments' THEN value END) AS "foreign_governments",
+    MAX(CASE WHEN source = 'foreign_individuals' THEN value END) AS "foreign_individuals",
+    MAX(CASE WHEN source = 'endowment_income' THEN value END) AS "endowment_income",
+    MAX(CASE WHEN source = 'revenue_from_sales' THEN value END) AS "revenue_from_sales",
+    MAX(CASE WHEN source = 'non_operating_income' THEN value END) AS "non_operating_income",
+    MAX(CASE WHEN source = 'funds_from_subsidiaries' THEN value END) AS "funds_from_subsidiaries",
+    MAX(CASE WHEN source = 'other_receipts' THEN value END) AS "other_receipts"
+FROM (
+    SELECT source, year, value
+    FROM raw_data
+    CROSS JOIN LATERAL (
+        VALUES 
+            ('2012', "2012"), ('2013', "2013"), ('2014', "2014"), ('2015', "2015"),
+            ('2016', "2016"), ('2017', "2017"), ('2018', "2018"), ('2019', "2019"),
+            ('2020', "2020"), ('2021', "2021"), ('2022', "2022"), ('2023', "2023"), ('2024', "2024")
+    ) AS years(year, value)
+) AS unpivoted
+GROUP BY year
+ORDER BY year;
