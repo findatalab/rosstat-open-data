@@ -1,0 +1,48 @@
+CREATE TABLE sonko_5 AS
+WITH raw_data AS (
+    SELECT 
+        'social_services_total' AS category, 
+        18468::numeric AS "2012", 17883::numeric AS "2013", 23216::numeric AS "2014", 26320::numeric AS "2015", 
+        31825::numeric AS "2016", 42022::numeric AS "2017", 60377::numeric AS "2018", 66289::numeric AS "2019", 
+        50170::numeric AS "2020", 70814::numeric AS "2021", 78811::numeric AS "2022", 89591::numeric AS "2023", 95630::numeric AS "2024"
+    UNION ALL SELECT 'education', 
+        NULL, NULL, NULL, NULL, 10269, 8826, 16221, 18277, 14084, 21339, 22834, 28616, 30213
+    UNION ALL SELECT 'healthcare', 
+        NULL, NULL, NULL, NULL, 7817, 12441, 15203, 15632, 12456, 13753, 12837, 13316, 14694
+    UNION ALL SELECT 'culture_and_cinematography', 
+        NULL, NULL, NULL, NULL, 5331, 9380, 13885, 16748, 10080, 18401, 23378, 26431, 28499
+    UNION ALL SELECT 'sports', 
+        NULL, NULL, NULL, NULL, 3224, 4945, 6655, 6951, 4550, 7898, 6909, 8183, 8761
+    UNION ALL SELECT 'social_policy', 
+        NULL, NULL, NULL, NULL, 5184, 6430, 8413, 8681, 9000, 9423, 12853, 13045, 13463
+    UNION ALL SELECT 'legal_aid', 
+        1800, 1659, 5067, 3120, 2292, 2813, 2874, 2389, 2414, 1988, 2093, 1851, 2010
+    UNION ALL SELECT 'charitable_aid_in_kind', 
+        5453, 5237, 5654, 5415, 5643, 6600, 6898, 7162, 9132, 6825, 9833, 13355, 15004
+    UNION ALL SELECT 'charitable_aid_cash', 
+        3576, 2324, 3197, 2848, 1623, 1995, 1937, 1779, 1196, 2106, 2284, 2264, 2310
+)
+SELECT 
+    year,
+    MAX(CASE WHEN category = 'social_services_total' THEN value END) AS "social_services_total",
+    MAX(CASE WHEN category = 'education' THEN value END) AS "education",
+    MAX(CASE WHEN category = 'healthcare' THEN value END) AS "healthcare",
+    MAX(CASE WHEN category = 'culture_and_cinematography' THEN value END) AS "culture_and_cinematography",
+    MAX(CASE WHEN category = 'sports' THEN value END) AS "sports",
+    MAX(CASE WHEN category = 'social_policy' THEN value END) AS "social_policy",
+    MAX(CASE WHEN category = 'legal_aid' THEN value END) AS "legal_aid",
+    MAX(CASE WHEN category = 'charitable_aid_in_kind' THEN value END) AS "charitable_aid_in_kind",
+    MAX(CASE WHEN category = 'charitable_aid_cash' THEN value END) AS "charitable_aid_cash"
+FROM (
+    SELECT category, year, value
+    FROM raw_data
+    CROSS JOIN LATERAL (
+        VALUES 
+            ('2012', "2012"), ('2013', "2013"), ('2014', "2014"), ('2015', "2015"),
+            ('2016', "2016"), ('2017', "2017"), ('2018', "2018"), ('2019', "2019"),
+            ('2020', "2020"), ('2021', "2021"), ('2022', "2022"), ('2023', "2023"), ('2024', "2024")
+    ) AS years(year, value)
+) AS unpivoted
+WHERE value IS NOT NULL
+GROUP BY year
+ORDER BY year;
